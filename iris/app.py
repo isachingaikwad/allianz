@@ -5,9 +5,9 @@ import numpy as np
 app = Flask(__name__)
 
 # Load your trained machine learning model
-model = joblib.load('your_model.pkl')
+model = joblib.load('IRIS-model.pkl')
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
     try:
         # Get data from the request
@@ -15,6 +15,7 @@ def predict():
         
         # Assuming the data contains features 'sepal_length', 'sepal_width', 'petal_length', 'petal_width'
         features = [data['sepal_length'], data['sepal_width'], data['petal_length'], data['petal_width']]
+        # features = [['sepal_length'],'[sepal_width]','[petal_length]', '[petal_width]']
         
         # Make a prediction
         prediction = model.predict(np.array(features).reshape(1, -1))
