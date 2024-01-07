@@ -1,5 +1,3 @@
-django
-joblib
+flask
 scikit-learn
-psycopg2
-Cython
+joblib
