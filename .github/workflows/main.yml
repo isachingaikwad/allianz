@@ -25,4 +25,4 @@ jobs:
     - name: Build and push Docker image 
       run: |
         docker build -t allianz-iris:latest iris/.
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/allianz-iris:latest
+        docker push sachinmgaikwad185/allianz-iris:latest
