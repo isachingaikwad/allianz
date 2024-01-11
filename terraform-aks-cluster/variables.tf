@@ -11,3 +11,9 @@ variable "resource_group_name" {
   type        = string
   default     = "allianz"
 }
+
+variable "location" {
+  description = "Resource group location"
+  type        = string
+  default     = "South India"
+}
