@@ -30,6 +30,12 @@ jobs:
         docker build -t sachinmgaikwad185/allianz-iris:latest iris/.
         docker push sachinmgaikwad185/allianz-iris:latest
 
+    - name: Azure Login
+      uses: Azure/login@v1.5.1
+      with:
+        # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+                
   # deploy-to-aks:
   #   name: Deploy model to AKS
   #   needs: [ build-and-push ]
