@@ -30,10 +30,10 @@ jobs:
         docker build -t sachinmgaikwad185/allianz-iris:latest iris/.
         docker push sachinmgaikwad185/allianz-iris:latest
 
-  deploy-to-aks:
-    name: Deploy model to AKS
-    needs: [ build-and-push ]
-    uses: ../.github/workflows/REUSABLE_WORKFLOW_aks.yml
-    secrets: inherit
-    with:
-      creds: ${{ github.env.AZURE_CREDENTIALS }}
+  # deploy-to-aks:
+  #   name: Deploy model to AKS
+  #   needs: [ build-and-push ]
+  #   uses: ../.github/workflows/REUSABLE_WORKFLOW_aks.yml
+  #   secrets: inherit
+  #   with:
+  #     creds: ${{ github.env.AZURE_CREDENTIALS }}
