@@ -28,6 +28,8 @@ jobs:
         #!/bin/bash
         set -xeu
         pwd
+        ls
+        echo "Initializing terraform aks cluster configuration"
         cd terraform-aks-cluster
         terraform init
 
@@ -36,8 +38,17 @@ jobs:
         #!/bin/bash
         set -xeu
         pwd
-        # cd terraform-aks-cluster
-        # terraform apply -auto-approve
+        ls
+        echo "Apply configuration terraform aks cluster"        
+        cd terraform-aks-cluster
+        terraform apply -auto-approve
 
-    # - name: Terraform Destroy (optional)
-    #   run: terraform destroy -auto-approve
+    - name: Terraform Destroy (optional)
+      run: |
+        #!/bin/bash
+        set -xeu
+        pwd
+        ls
+        echo "Applying terraform aks cluster configuration"
+        cd terraform-aks-cluster
+        terraform destroy -auto-approve
