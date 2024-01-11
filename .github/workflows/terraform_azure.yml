@@ -1,0 +1,43 @@
+---
+name: Provision aks cluster using terraform
+
+on:
+  workflow_dispatch: 
+ 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.0
+
+    - name: Azure Login
+      uses: Azure/login@v1.5.1
+      with:
+        # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+            
+    - name: Terraform Init
+      run: |
+        #!/bin/bash
+        set -xeu
+        pwd
+        cd terraform-aks-cluster
+        terraform init
+
+    - name: Terraform Apply
+      run: |
+        #!/bin/bash
+        set -xeu
+        pwd
+        # cd terraform-aks-cluster
+        # terraform apply -auto-approve
+
+    # - name: Terraform Destroy (optional)
+    #   run: terraform destroy -auto-approve
