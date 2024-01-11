@@ -2,8 +2,10 @@ name: Build and Push Docker Image
 
 on:
   push:
-    branches:
-      - main
+    paths: 
+      - iris/**
+    # branches:
+    #   - main
 
 env:
   AZURE_CREDENTIALS : ${{ secrets.AZURE_CREDENTIALS }}

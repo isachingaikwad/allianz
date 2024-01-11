@@ -43,12 +43,12 @@ jobs:
         cd terraform-aks-cluster
         terraform apply -auto-approve
 
-    - name: Terraform Destroy (optional)
-      run: |
-        #!/bin/bash
-        set -xeu
-        pwd
-        ls
-        echo "Applying terraform aks cluster configuration"
-        cd terraform-aks-cluster
-        terraform destroy -auto-approve
+    # - name: Terraform Destroy (optional)
+    #   run: |
+    #     #!/bin/bash
+    #     set -xeu
+    #     pwd
+    #     ls
+    #     echo "Applying terraform aks cluster configuration"
+    #     cd terraform-aks-cluster
+    #     terraform destroy -auto-approve
