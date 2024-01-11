@@ -20,10 +20,10 @@ resource "azurerm_resource_group" "rg" {
 }
 ###############
 
-resource "azurerm_kubernetes_cluster" "default" {
+resource "azurerm_kubernetes_cluster" "rg" {
   name                = "allianz-aks"
-  location            = azurerm_resource_group.default.location
-  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "allianz-k8s"
   kubernetes_version  = "1.26.3"
 
