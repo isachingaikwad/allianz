@@ -60,8 +60,8 @@ jobs:
       with:
         namespace: 'default'
         manifests: |
-            k8s/deployment.yaml
-            k8s/service.yaml
+            k8s/manifests/deployment.yaml
+            k8s/manifests/service.yaml
         images: '${{ secrets.REGISTRY }}/${{ secrets.REPOSITORY }}:latest'
         pull-images: false
                 
