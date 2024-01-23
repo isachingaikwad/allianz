@@ -64,11 +64,20 @@ jobs:
             k8s/manifests/service.yaml
         images: '${{ secrets.REGISTRY }}/${{ secrets.REPOSITORY }}:latest'
         pull-images: false
-                
+
+  deploy-monitoring:
+    name: Deploy Monitoring to AKS
+    needs: [build-and-push]
+    uses: ./.github/workflows/REUSABLE_WORKFLOW_monitoring.yml
+    secrets: inherit
+    with:
+      resource-group: '${{ secrets.RESOURCE_GROUP }}' 
+      cluster-name: '${{ secrets.CLUSTER_NAME }}'
+
   # deploy-to-aks:
   #   name: Deploy model to AKS
   #   needs: [ build-and-push ]
-  #   uses: ../.github/workflows/REUSABLE_WORKFLOW_aks.yml
+  #   uses: ./.github/workflows/REUSABLE_WORKFLOW_aks.yml
   #   secrets: inherit
   #   with:
   #     creds: ${{ github.env.AZURE_CREDENTIALS }}
