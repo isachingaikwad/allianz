@@ -9,6 +9,8 @@ on:
 
 env:
   AZURE_CREDENTIALS : ${{ secrets.AZURE_CREDENTIALS }}
+  RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
 
 jobs:
   build-and-push:
@@ -67,12 +69,12 @@ jobs:
 
   deploy-monitoring:
     name: Deploy Monitoring to AKS
-    needs: [build-and-push]
+    needs: [ build-and-push]
     uses: ./.github/workflows/REUSABLE_WORKFLOW_monitoring.yml
     secrets: inherit
     with:
-      resource-group: '${{ secrets.RESOURCE_GROUP }}' 
-      cluster-name: '${{ secrets.CLUSTER_NAME }}'
+      resource-group: 'allianz'
+      cluster-name: 'allianz-aks'
 
   # deploy-to-aks:
   #   name: Deploy model to AKS
