@@ -58,6 +58,7 @@ jobs:
         set -xeu
         pwd
         ls
-        echo "Applying terraform aks cluster configuration"
+        echo "Destroying terraform aks cluster configuration"
         cd terraform-aks-cluster
+        terraform init
         terraform destroy -auto-approve

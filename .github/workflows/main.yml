@@ -1,11 +1,13 @@
 name: Build and Push Docker Image
 
 on:
-  push:
-    # paths: 
-    #   - iris/**
-    branches:
-      - feature/**
+  workflow_dispatch:
+    
+  # push:
+  #   # paths: 
+  #   #   - iris/**
+  #   branches:
+  #     - feature/**
 
 env:
   AZURE_CREDENTIALS : ${{ secrets.AZURE_CREDENTIALS }}
