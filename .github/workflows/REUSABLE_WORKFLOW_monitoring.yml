@@ -1,0 +1,44 @@
+name: Deploy Monitoring
+
+on:
+  workflow_call:
+    inputs:
+      resource-group:
+        description: Resource group name
+        type: string
+        default: allianz
+        required: true
+      cluster-name:
+        description: AKS cluster name
+        type: string
+        default: allianz-aks
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1.5.1
+        with:
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        run: az aks get-credentials --resource-group ${{ inputs.resource-group }} --name ${{ inputs.cluster-name }}
+
+      - name: Deploy Prometheus and Grafana
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/bundle.yaml
+
+      - name: Expose Grafana service
+        run: kubectl expose service prometheus-operator --type=LoadBalancer --name=grafana-service --namespace=default

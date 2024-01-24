@@ -2,8 +2,14 @@
 name: Provision aks cluster using terraform
 
 on:
-  workflow_dispatch: 
- 
+  workflow_dispatch:
+    inputs:
+      provision:
+        description: provision aks cluster
+        type: boolean
+        required: true
+        default: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -24,6 +30,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
             
     - name: Terraform Init
+      if: ${{ inputs.provision }}
       run: |
         #!/bin/bash
         set -xeu
@@ -34,6 +41,7 @@ jobs:
         terraform init
 
     - name: Terraform Apply
+      if: ${{ inputs.provision }}
       run: |
         #!/bin/bash
         set -xeu
@@ -43,12 +51,14 @@ jobs:
         cd terraform-aks-cluster
         terraform apply -auto-approve
 
-    # - name: Terraform Destroy (optional)
-    #   run: |
-    #     #!/bin/bash
-    #     set -xeu
-    #     pwd
-    #     ls
-    #     echo "Applying terraform aks cluster configuration"
-    #     cd terraform-aks-cluster
-    #     terraform destroy -auto-approve
+    - name: Terraform Destroy (optional)
+      if: ${{ inputs.provision != 'true' }}
+      run: |
+        #!/bin/bash
+        set -xeu
+        pwd
+        ls
+        echo "Destroying terraform aks cluster configuration"
+        cd terraform-aks-cluster
+        terraform init
+        terraform destroy -auto-approve

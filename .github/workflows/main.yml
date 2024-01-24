@@ -1,6 +1,8 @@
 name: Build and Push Docker Image
 
 on:
+  workflow_dispatch:
+    
   push:
     # paths: 
     #   - iris/**
@@ -9,6 +11,8 @@ on:
 
 env:
   AZURE_CREDENTIALS : ${{ secrets.AZURE_CREDENTIALS }}
+  RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
 
 jobs:
   build-and-push:
@@ -64,11 +68,12 @@ jobs:
             k8s/manifests/service.yaml
         images: '${{ secrets.REGISTRY }}/${{ secrets.REPOSITORY }}:latest'
         pull-images: false
-                
-  # deploy-to-aks:
-  #   name: Deploy model to AKS
-  #   needs: [ build-and-push ]
-  #   uses: ../.github/workflows/REUSABLE_WORKFLOW_aks.yml
-  #   secrets: inherit
-  #   with:
-  #     creds: ${{ github.env.AZURE_CREDENTIALS }}
+
+  deploy-monitoring:
+    name: Deploy Monitoring to AKS
+    needs: [ build-and-push]
+    uses: ./.github/workflows/REUSABLE_WORKFLOW_monitoring.yml
+    secrets: inherit
+    with:
+      resource-group: 'allianz'
+      cluster-name: 'allianz-aks'

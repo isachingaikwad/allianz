@@ -1,10 +1,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-provider "azurerm" {
-  features {}
-}
-
 ##############
 # Check if the resource group already exists
 data "azurerm_resource_group" "existing_rg" {
