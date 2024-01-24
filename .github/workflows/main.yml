@@ -69,11 +69,11 @@ jobs:
         images: '${{ secrets.REGISTRY }}/${{ secrets.REPOSITORY }}:latest'
         pull-images: false
 
-  deploy-monitoring:
-    name: Deploy Monitoring to AKS
-    needs: [ build-and-push]
-    uses: ./.github/workflows/REUSABLE_WORKFLOW_monitoring.yml
-    secrets: inherit
-    with:
-      resource-group: 'allianz'
-      cluster-name: 'allianz-aks'
+  # deploy-monitoring:
+  #   name: Deploy Monitoring to AKS
+  #   needs: [ build-and-push]
+  #   uses: ./.github/workflows/REUSABLE_WORKFLOW_monitoring.yml
+  #   secrets: inherit
+  #   with:
+  #     resource-group: 'allianz'
+  #     cluster-name: 'allianz-aks'
