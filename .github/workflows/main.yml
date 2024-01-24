@@ -3,11 +3,11 @@ name: Build and Push Docker Image
 on:
   workflow_dispatch:
     
-  # push:
-  #   # paths: 
-  #   #   - iris/**
-  #   branches:
-  #     - feature/**
+  push:
+    # paths: 
+    #   - iris/**
+    branches:
+      - main
 
 env:
   AZURE_CREDENTIALS : ${{ secrets.AZURE_CREDENTIALS }}
@@ -77,11 +77,3 @@ jobs:
     with:
       resource-group: 'allianz'
       cluster-name: 'allianz-aks'
-
-  # deploy-to-aks:
-  #   name: Deploy model to AKS
-  #   needs: [ build-and-push ]
-  #   uses: ./.github/workflows/REUSABLE_WORKFLOW_aks.yml
-  #   secrets: inherit
-  #   with:
-  #     creds: ${{ github.env.AZURE_CREDENTIALS }}

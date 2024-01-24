@@ -52,7 +52,7 @@ jobs:
         terraform apply -auto-approve
 
     - name: Terraform Destroy (optional)
-      if: ${{ inputs.provision }}
+      if: ${{ inputs.provision != 'true' }}
       run: |
         #!/bin/bash
         set -xeu
@@ -62,10 +62,3 @@ jobs:
         cd terraform-aks-cluster
         terraform init
         terraform destroy -auto-approve
-
-    - name: Deploy Monitoring to AKS
-      if: ${{ inputs.provision != 'true' }}
-      uses: ./.github/workflows/REUSABLE_WORKFLOW_monitoring.yml
-      with:
-        resource-group: 'allianz'
-        cluster-name: 'allianz-ak'
