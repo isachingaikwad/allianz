@@ -42,11 +42,3 @@ jobs:
 
       - name: Expose Grafana service
         run: kubectl expose service prometheus-operator --type=LoadBalancer --name=grafana-service --namespace=default
-
-  # deploy-to-aks:
-  #   name: Deploy model to AKS
-  #   needs: [ build-and-push ]
-  #   uses: ../.github/workflows/REUSABLE_WORKFLOW_aks.yml
-  #   secrets: inherit
-  #   with:
-  #     creds: ${{ github.env.AZURE_CREDENTIALS }}

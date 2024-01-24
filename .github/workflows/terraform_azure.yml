@@ -15,56 +15,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: Checkout code
-    #   uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    # - name: Set up Terraform
-    #   uses: hashicorp/setup-terraform@v1
-    #   with:
-    #     terraform_version: 0.14.0
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.0
 
-    # - name: Azure Login
-    #   uses: Azure/login@v1.5.1
-    #   with:
-    #     # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Azure Login
+      uses: Azure/login@v1.5.1
+      with:
+        # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
             
-    # - name: Terraform Init
-    #   if: ${{ inputs.provision }}
-    #   run: |
-    #     #!/bin/bash
-    #     set -xeu
-    #     pwd
-    #     ls
-    #     echo "Initializing terraform aks cluster configuration"
-    #     cd terraform-aks-cluster
-    #     terraform init
+    - name: Terraform Init
+      if: ${{ inputs.provision }}
+      run: |
+        #!/bin/bash
+        set -xeu
+        pwd
+        ls
+        echo "Initializing terraform aks cluster configuration"
+        cd terraform-aks-cluster
+        terraform init
 
-    # - name: Terraform Apply
-    #   if: ${{ inputs.provision }}
-    #   run: |
-    #     #!/bin/bash
-    #     set -xeu
-    #     pwd
-    #     ls
-    #     echo "Apply configuration terraform aks cluster"        
-    #     cd terraform-aks-cluster
-    #     terraform apply -auto-approve
+    - name: Terraform Apply
+      if: ${{ inputs.provision }}
+      run: |
+        #!/bin/bash
+        set -xeu
+        pwd
+        ls
+        echo "Apply configuration terraform aks cluster"        
+        cd terraform-aks-cluster
+        terraform apply -auto-approve
 
-    # - name: Terraform Destroy (optional)
-    #   if: ${{ inputs.provision != 'true' }}
-    #   run: |
-    #     #!/bin/bash
-    #     set -xeu
-    #     pwd
-    #     ls
-    #     echo "Destroying terraform aks cluster configuration"
-    #     cd terraform-aks-cluster
-    #     terraform init
-    #     terraform destroy -auto-approve
+    - name: Terraform Destroy (optional)
+      if: ${{ inputs.provision }}
+      run: |
+        #!/bin/bash
+        set -xeu
+        pwd
+        ls
+        echo "Destroying terraform aks cluster configuration"
+        cd terraform-aks-cluster
+        terraform init
+        terraform destroy -auto-approve
 
-      - name: Deploy Monitoring to AKS
-        uses: ./.github/workflows/REUSABLE_WORKFLOW_monitoring.yml
-        with:
-          resource-group: 'allianz'
-          cluster-name: 'allianz-ak'
+    - name: Deploy Monitoring to AKS
+      if: ${{ inputs.provision != 'true' }}
+      uses: ./.github/workflows/REUSABLE_WORKFLOW_monitoring.yml
+      with:
+        resource-group: 'allianz'
+        cluster-name: 'allianz-ak'

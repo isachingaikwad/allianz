@@ -4,11 +4,9 @@ description: Deploy ML module to AKS cluster
 # on:
 #   workflow_dispatch: 
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
+runs:
+  using: composite
+  steps:
     - name: Checkout code
       uses: actions/checkout@v2
     # Set the target Azure Kubernetes Service (AKS) cluster. 
