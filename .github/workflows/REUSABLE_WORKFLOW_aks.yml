@@ -1,26 +1,79 @@
----
-name: _aks
+# ---
+# name: _aks
+
+# on:
+#   workflow_call:
+#     inputs:
+#       resource_group:
+#         description: Resource group name
+#         type: string
+#         default: allianz
+#         required: true
+#       cred:
+#         description: Azure Credentials
+#         type: string
+#         required: true
+
+# jobs:
+#   azure:
+#     name: Azure Login
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Azure Login 
+#         uses: ./.github/actions/login
+#         with:
+#           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+#           creds: ${{ inputs.cred }}
+#######################################################################
+name: Deploy Monitoring
 
 on:
   workflow_call:
     inputs:
-      resource_group:
+      resource-group:
         description: Resource group name
         type: string
         default: allianz
         required: true
-      cred:
-        description: Azure Credentials
+      cluster-name:
+        description: AKS cluster name
         type: string
+        default: allianz-aks
         required: true
 
 jobs:
-  azure:
-    name: Azure Login
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Azure Login 
-        uses: ./.github/actions/login
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1.5.1
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-          creds: ${{ inputs.cred }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        run: az aks get-credentials --resource-group ${{ inputs.resource-group }} --name ${{ inputs.cluster-name }}
+
+      - name: Deploy Prometheus and Grafana
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.47/bundle.yaml
+
+      - name: Expose Grafana service
+        run: kubectl expose service prometheus-operator --type=LoadBalancer --name=grafana-service --namespace=default
+
+  # deploy-to-aks:
+  #   name: Deploy model to AKS
+  #   needs: [ build-and-push ]
+  #   uses: ../.github/workflows/REUSABLE_WORKFLOW_aks.yml
+  #   secrets: inherit
+  #   with:
+  #     creds: ${{ github.env.AZURE_CREDENTIALS }}
